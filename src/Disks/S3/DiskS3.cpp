@@ -286,14 +286,14 @@ std::unique_ptr<WriteBufferFromFileBase> DiskS3::writeFile(const String & path, 
         settings->s3_upload_part_size_multiply_parts_count_threshold,
         settings->s3_max_single_part_upload_size,
         std::move(object_metadata),
-        buf_size /*, std::move(schedule) */);
+        buf_size, std::move(schedule));
 
     auto create_metadata_callback = [this, path, blob_name, mode] (size_t count)
     {
         readOrCreateUpdateAndStoreMetadata(path, mode, false, [blob_name, count] (Metadata & metadata) { metadata.addObject(blob_name, count); return true; });
     };
 
-    return std::make_unique<WriteIndirectBufferFromRemoteFS<WriteBufferFromS3>>(std::move(s3_buffer), std::move(create_metadata_callback), path);
+    return std::make_unique<WriteIndirectBufferFromRemoteFS>(std::move(s3_buffer), std::move(create_metadata_callback), path);
 }
 
 void DiskS3::createHardLink(const String & src_path, const String & dst_path)
