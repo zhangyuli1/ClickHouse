@@ -134,7 +134,6 @@ def test_sequential_nodes(started_cluster):
         for zk in [genuine_zk, fake_zk]:
             stop_zk(zk)
 
-
 def assert_eq_stats(stat1, stat2):
     assert stat1.version == stat2.version
     assert stat1.cversion == stat2.cversion
